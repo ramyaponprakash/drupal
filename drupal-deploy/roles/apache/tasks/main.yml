@@ -1,0 +1,69 @@
+---
+    - name: "Install Apache dependencies."
+      apt:
+       state: present
+       name:
+          - apache2
+
+    - name: "Start Apache, MySQL, and PHP."
+      service: "name={{ item }} state=started enabled=yes"
+      with_items:
+        - apache2
+        
+
+    - name: Enable Apache rewrite module (required for Drupal).
+      apache2_module: name=rewrite state=present
+      notify: restart apache
+
+    - name: disable Apache  module
+      apache2_module: name=mpm_event state=absent ignore_configcheck=True
+      notify: restart apache
+
+    - name: Enable Apache  modules
+      apache2_module: 
+        name="{{ item }}"
+        state=present
+        ignore_configcheck=True
+      with_items:
+        - mpm_prefork
+        - php7.1
+      notify: restart apache
+
+    - name: Add Apache virtualhost for Drupal 8.
+      template:
+        src: "templates/drupal.test.conf.j2"
+        dest: "/etc/apache2/sites-available/{{ domain }}.test.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart apache
+
+    - name: Symlink Drupal virtualhost to sites-enabled.
+      file:
+        src: "/etc/apache2/sites-available/{{ domain }}.test.conf"
+        dest: "/etc/apache2/sites-enabled/{{ domain }}.test.conf"
+        state: link
+      notify: restart apache
+
+    - name: Remove default virtualhost file.
+      file:
+        path: "/etc/apache2/sites-enabled/000-default.conf"
+        state: absent
+      notify: restart apache
+
+    - name: Adjust OpCache memory setting.
+      lineinfile:
+        dest: "/etc/php/7.1/apache2/conf.d/10-opcache.ini"
+        regexp: "^opcache.memory_consumption"
+        line: "opcache.memory_consumption = 96"
+        state: present
+      notify: restart apache
+
+    - name: php correction
+      blockinfile:
+        path: /etc/apache2/apache2.conf
+        block: |
+          <FilesMatch \.php$>
+          SetHandler application/x-httpd-php
+          </FilesMatch>
+      notify: restart apache

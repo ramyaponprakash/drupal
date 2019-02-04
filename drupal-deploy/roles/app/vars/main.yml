@@ -1,0 +1,20 @@
+---
+# The core version 
+drupal_core_version: "8.5.x"
+
+# The path where Drupal will be downloaded and installed.
+drupal_core_path: "/var/www/drupal-{{ drupal_core_version }}-dev"
+
+domain: "drupal"
+
+# Your Drupal site name.
+drupal_site_name: "Drupal Test"
+
+# My sql password
+mysql_pass: "1234"
+
+#Admin user
+drupal-uname: "gobear"
+
+#Admin pass
+drupal-pass: "gobear123"

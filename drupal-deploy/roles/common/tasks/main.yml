@@ -1,0 +1,20 @@
+---
+-   name: Update apt cache if needed.
+    apt: update_cache=yes cache_valid_time=3600
+
+-   name: Get software for apt repository management.
+    apt:
+      state: present
+      name:
+        - python-apt
+        - python-pycurl
+-   name: "Install dependencies."
+    apt:
+      state: present
+      name:
+        - git
+        - curl
+        - unzip
+        - sendmail
+-   name: Disable the firewall (since this is for local dev only).
+    service: name=ufw state=stopped        
