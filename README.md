@@ -8,7 +8,7 @@ This project makes local Drupal test/development environment management quick an
   - Drush
   - Drupal
 
-It takes 5-10 minutes to build or rebuild the VM from scratch on a decent broadband connection.
+It takes 5-10 minutes to build 
 
 ## Quick Start Guide
 

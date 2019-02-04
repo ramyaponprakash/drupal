@@ -14,7 +14,7 @@ drupal_site_name: "Drupal Test"
 mysql_pass: "1234"
 
 #Admin user
-drupal-uname: "gobear"
+drupal-uname: "admin"
 
 #Admin pass
-drupal-pass: "gobear123"
+drupal-pass: "admin"
